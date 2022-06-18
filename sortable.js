@@ -41,7 +41,7 @@ export async function loadIntoTable(data) {
         headerElement.textContent = headerText;
         tableHead.querySelector("tr").appendChild(headerElement);
     }
-
+    console.log(rows)
     let tableRowData = ""
     rows.map(row => {
         // if (row.Name == 'Kang') {
@@ -49,7 +49,33 @@ export async function loadIntoTable(data) {
             <td><img src="${row.Icon}"></td>
             <td>${row.Name}</td>
             <td>${row.Full_Name}</td>
-            <td></td>
+            <td> <table>
+            <tr>
+            <br>
+            <td>Intelligence:</td>
+            <td>${row.Powerstats.intelligence}</td>
+            </tr>
+            <tr>
+            <td>Strength:</td>
+            <td>${row.Powerstats.strength}</td>
+            </tr>
+            <tr>
+            <td>Power:</td>
+            <td>${row.Powerstats.power}</td>
+            </tr>
+            <tr>
+            <td>Durablilty:</td>
+            <td>${row.Powerstats.durability}</td>
+            </tr>
+            <tr>
+            <td>Combat:</td>
+            <td>${row.Powerstats.combat}</td>
+            </tr>
+            <tr>
+            <td>Speed:</td>
+            <td>${row.Powerstats.speed}</td>
+            </tr>
+        </table></td>
             <td>${row.Race}</td>
             <td>${row.Gender}</td>
             <td>${row.Height[0]}</td>
@@ -58,7 +84,7 @@ export async function loadIntoTable(data) {
             <td>${row.Alignement}</td>
             </tr>`
         // }
-
+        // ${row.Powerstats.intelligence}
         // console.log(row.Full_Name)
     })
     document.getElementById('tbody').innerHTML = tableRowData
