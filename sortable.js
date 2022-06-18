@@ -4,7 +4,6 @@ export async function sortable() {
     const heroData = await fetch('https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json')
         .then((response) => response.json()) // parse the response from JSON
         .then(loadData => {
-            //console.log(loadData)
             for (var i = 0; i < loadData.length; i++) {
                 dataAll.push({
 
@@ -41,15 +40,40 @@ export async function loadIntoTable(data) {
         headerElement.textContent = headerText;
         tableHead.querySelector("tr").appendChild(headerElement);
     }
-
+    console.log(rows)
     let tableRowData = ""
     rows.map(row => {
-        // if (row.Name == 'Kang') {
         tableRowData += `<tr>
             <td><img src="${row.Icon}"></td>
             <td>${row.Name}</td>
             <td>${row.Full_Name}</td>
-            <td></td>
+            <td> <table>
+            <tr>
+            <br>
+            <td>Intelligence:</td>
+            <td>${row.Powerstats.intelligence}</td>
+            </tr>
+            <tr>
+            <td>Strength:</td>
+            <td>${row.Powerstats.strength}</td>
+            </tr>
+            <tr>
+            <td>Power:</td>
+            <td>${row.Powerstats.power}</td>
+            </tr>
+            <tr>
+            <td>Durablilty:</td>
+            <td>${row.Powerstats.durability}</td>
+            </tr>
+            <tr>
+            <td>Combat:</td>
+            <td>${row.Powerstats.combat}</td>
+            </tr>
+            <tr>
+            <td>Speed:</td>
+            <td>${row.Powerstats.speed}</td>
+            </tr>
+        </table></td>
             <td>${row.Race}</td>
             <td>${row.Gender}</td>
             <td>${row.Height[0]}</td>
@@ -57,10 +81,7 @@ export async function loadIntoTable(data) {
             <td>${row.Place_Of_Birth}</td>
             <td>${row.Alignement}</td>
             </tr>`
-        // }
-
-        // console.log(row.Full_Name)
     })
     document.getElementById('tbody').innerHTML = tableRowData
-    // console.log(tableRowData)
+
 }
