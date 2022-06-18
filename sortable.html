@@ -41,9 +41,8 @@
 <body>
 
 
-  <div class= "container-col-6 mt-5">
-  <input type="text" class="form-control mb-5 p-3" placeholder="Search Here..." id="search-input">
-
+    <input placeholder="Looking for a hero" name="name"/>
+    <p id="values"></p>
 </div>
     <h1>SORTABLE</h1>
     <br>
@@ -56,20 +55,26 @@
     <script type="module">
 
         import { sortable, loadIntoTable } from './sortable.js'
+        
 
-        loadIntoTable(filterList())
+        loadIntoTable()
 
     </script>
-<script>
 
-    document.querySelector('#search-input').addEventListener('input', filterList);
+<script type = "module">
+    import{loadIntoTable} from './sortable.js'
 
-   function filterList(){
-        const searchInput = document.querySelector('#search-input');
-        const filter= searchInput.value.toLowerCase();
-        return filter
+const input = document.querySelector('input');
+const log = document.getElementById('values');
 
-    }
+input.addEventListener('input', updateValue)
+
+
+function updateValue(e) {
+ let textContent = e.target.value;
+  loadIntoTable(textContent)
+}
+
 
 </script>
 </body>

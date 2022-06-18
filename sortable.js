@@ -26,17 +26,7 @@ export async function sortable() {
   return dataAll;
 }
 
-
-export async function filterList(usersearch) {
-    const searchInput = document.querySelector("#search-input");
-    const filter = searchInput.value.toLowerCase();
-    console.log(filter);
-    return filter;
-  }
-
-export async function loadIntoTable(usersearch) {
-  console.log(typeof usersearch);
-  console.log('--', usersearch.length);
+export async function loadIntoTable(userInput) {
   const headers = [
     "Icon",
     "Name",
@@ -64,14 +54,10 @@ export async function loadIntoTable(usersearch) {
   }
 
   let tableRowData = "";
-  let toSearch = usersearch
-//   if (toSearch.length == 0 ) {
-//     toSearch = usersearch.replace(/[^0-9A-Z]+/gi, "").toLowerCase();
-//   }else{
-//     toSearch = undefined
-//   }
+  let toSearch = userInput;
+
   rows.map((row) => {
-    if (toSearch.length == 0 ) {
+    if (toSearch == undefined) {
       tableRowData += `<tr>
             <td><img src="${row.Icon}"></td>
             <td>${row.Name}</td>
@@ -106,19 +92,7 @@ export async function loadIntoTable(usersearch) {
       }
     }
 
-    // console.log(row.Full_Name)
   });
   document.getElementById("tbody").innerHTML = tableRowData;
-  // console.log(tableRowData)
 }
-
-
-    // function filterList(){
-    //     const searchInput = document.querySelector
-    //     ('#search-input');
-    //     const filter= searchInput.value.toLowerCase();
-    //     console.log(filter);
-    //     return filter
-      
-    // }
 
