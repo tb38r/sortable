@@ -57,18 +57,18 @@
 
         import { sortable, loadIntoTable } from './sortable.js'
 
-        loadIntoTable('')
+        loadIntoTable(filterList())
 
     </script>
 <script>
+
     document.querySelector('#search-input').addEventListener('input', filterList);
 
-    function filterList(){
-        const searchInput = document.querySelector
-        ('#search-input');
+   function filterList(){
+        const searchInput = document.querySelector('#search-input');
         const filter= searchInput.value.toLowerCase();
-        console.log(filter);
         return filter
+
     }
 
 </script>

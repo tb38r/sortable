@@ -26,8 +26,17 @@ export async function sortable() {
   return dataAll;
 }
 
+
+export async function filterList(usersearch) {
+    const searchInput = document.querySelector("#search-input");
+    const filter = searchInput.value.toLowerCase();
+    console.log(filter);
+    return filter;
+  }
+
 export async function loadIntoTable(usersearch) {
-    console.log(typeof usersearch);
+  console.log(typeof usersearch);
+  console.log('--', usersearch.length);
   const headers = [
     "Icon",
     "Name",
@@ -55,9 +64,14 @@ export async function loadIntoTable(usersearch) {
   }
 
   let tableRowData = "";
-  let toSearch = usersearch.replace(/[^0-9A-Z]+/gi,"").toLowerCase();
+  let toSearch = usersearch
+//   if (toSearch.length == 0 ) {
+//     toSearch = usersearch.replace(/[^0-9A-Z]+/gi, "").toLowerCase();
+//   }else{
+//     toSearch = undefined
+//   }
   rows.map((row) => {
-    if ((toSearch == undefined)) {
+    if (toSearch.length == 0 ) {
       tableRowData += `<tr>
             <td><img src="${row.Icon}"></td>
             <td>${row.Name}</td>
@@ -70,10 +84,14 @@ export async function loadIntoTable(usersearch) {
             <td>${row.Place_Of_Birth}</td>
             <td>${row.Alignement}</td>
             </tr>`;
-    }else {
-     if (row.Name.replace(/[^0-9A-Z]+/gi,"").toLowerCase().includes(toSearch)) {
+    } else {
+      if (
+        row.Name.replace(/[^0-9A-Z]+/gi, "")
+          .toLowerCase()
+          .includes(toSearch)
+      ) {
         console.log(toSearch);
-    tableRowData += `<tr>
+        tableRowData += `<tr>
             <td><img src="${row.Icon}"></td>
             <td>${row.Name}</td>
             <td>${row.Full_Name}</td>
@@ -85,7 +103,7 @@ export async function loadIntoTable(usersearch) {
             <td>${row.Place_Of_Birth}</td>
             <td>${row.Alignement}</td>
             </tr>`;
-     }
+      }
     }
 
     // console.log(row.Full_Name)
@@ -93,3 +111,14 @@ export async function loadIntoTable(usersearch) {
   document.getElementById("tbody").innerHTML = tableRowData;
   // console.log(tableRowData)
 }
+
+
+    // function filterList(){
+    //     const searchInput = document.querySelector
+    //     ('#search-input');
+    //     const filter= searchInput.value.toLowerCase();
+    //     console.log(filter);
+    //     return filter
+      
+    // }
+
