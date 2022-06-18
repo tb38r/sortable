@@ -39,23 +39,11 @@
 </head>
 
 <body>
-  <div class= "container-fluid text-white py-5" style= "background-color: #1d2630;">
-    <h1 class="text-center">Search/Filter Engine</h1>
-    <h5 class= "text-center">Looking for a Hero</h5>
-  </div>
+
 
   <div class= "container-col-6 mt-5">
   <input type="text" class="form-control mb-5 p-3" placeholder="Search Here..." id="search-input">
-  <ul class = "list-group list-group input-flush text primary">
-    
-  <li class="list-group-item p-3">Java</li>
-  <li class="list-group-item p-3">Python</li>
-  <li class="list-group-item p-3">C#</li>
-  <li  class="list-group-item p-3">Go</li>
-  <li class="list-group-item p-3">JS</li>
-  <li class="list-group-item p-3">Ruby</li>
-  <li class="list-group-item p-3">Swift</li>
-</ul>
+
 </div>
     <h1>SORTABLE</h1>
     <br>
@@ -69,7 +57,7 @@
 
         import { sortable, loadIntoTable } from './sortable.js'
 
-        loadIntoTable()
+        loadIntoTable('')
 
     </script>
 <script>
@@ -79,17 +67,8 @@
         const searchInput = document.querySelector
         ('#search-input');
         const filter= searchInput.value.toLowerCase();
-        const listItems = document.querySelectorAll('.list-group-item');
-
-        listItems.forEach((item)=>{
-            let text = item.textContent;
-            if(text.toLowerCase().includes(filter.toLowerCase())){
-                item.style.display = '';
-            }else{
-                item.style.display = 'none';
-
-            }
-        });
+        console.log(filter);
+        return filter
     }
 
 </script>
