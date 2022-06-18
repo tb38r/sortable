@@ -4,7 +4,6 @@ export async function sortable() {
     const heroData = await fetch('https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json')
         .then((response) => response.json()) // parse the response from JSON
         .then(loadData => {
-            //console.log(loadData)
             for (var i = 0; i < loadData.length; i++) {
                 dataAll.push({
 
@@ -44,7 +43,6 @@ export async function loadIntoTable(data) {
     console.log(rows)
     let tableRowData = ""
     rows.map(row => {
-        // if (row.Name == 'Kang') {
         tableRowData += `<tr>
             <td><img src="${row.Icon}"></td>
             <td>${row.Name}</td>
@@ -83,10 +81,7 @@ export async function loadIntoTable(data) {
             <td>${row.Place_Of_Birth}</td>
             <td>${row.Alignement}</td>
             </tr>`
-        // }
-        // ${row.Powerstats.intelligence}
-        // console.log(row.Full_Name)
     })
     document.getElementById('tbody').innerHTML = tableRowData
-    // console.log(tableRowData)
+
 }
