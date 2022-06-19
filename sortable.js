@@ -10,8 +10,8 @@ const pageSize = getOption();
 
 let curPage = 1;
 
+var dataAll = []
 export async function sortable() {
-    var dataAll = []
 
     const heroData = await fetch('https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json')
         .then((response) => response.json()) // parse the response from JSON
@@ -34,6 +34,7 @@ export async function sortable() {
         })
 
     loadIntoTable(dataAll)
+
     //sort = sort()
 
     /*document.querySelectorAll('#table thead tr th').forEach(t => {
@@ -52,11 +53,13 @@ export async function sortable() {
 
     document.querySelector('#nextButton').addEventListener('click', nextPage, false);
     document.querySelector('#prevButton').addEventListener('click', previousPage, false);
+    return dataAll
 }
 
 export async function loadIntoTable(data) {
-    const headers = ['Icon', 'Name', 'Full Name', 'Powerstats', 'Race', 'Gender', 'Height', 'Weight', 'Place of Birth', 'Alignment']
-    const rows = await data;
+    const headers = ['Icon', 'Name', 'Full_Name', 'intelligence', 'strength', 'power', 'durability', 'combat', 'speed', 'Race', 'Gender', 'Height', 'Weight', 'Place_Of_Birth', 'Alignement']
+    let rows = await data;
+    // let rows = await sortable()
     const table = document.querySelector('table');
     const tableHead = table.querySelector('thead');
     const tableBody = table.querySelector('tbody');
@@ -67,10 +70,87 @@ export async function loadIntoTable(data) {
     for (const headerText of headers) {
         const headerElement = document.createElement("th");
         headerElement.setAttribute("th", "data-sort");
+        headerElement.setAttribute('data-column', `${headerText}`)
+        headerElement.setAttribute('data-order', `asce`)
         headerElement.textContent = headerText;
         tableHead.querySelector("tr").appendChild(headerElement);
     }
-    console.log(rows)
+
+    const getAllHeaders = document.querySelectorAll('th')
+    for (const header of getAllHeaders) {
+        header.addEventListener('click', function () {
+            const getOrder = header.getAttribute('data-order')
+            const column = header.getAttribute('data-column')
+            const stringHeaderMatch = /Name|Full_Name|Race|Gender|Place_Of_Birth|Alignement/.test(column)
+            const digitHeaderMatch = /intelligence|strength|power|durability|combat|speed/.test(column)
+            console.log(column, 'was clicked', getOrder)
+
+            // for ascending 
+            if (getOrder == 'asce') {
+                header.setAttribute('data-order', 'desc')
+                // for string values
+                if (stringHeaderMatch) {
+                    rows = sortedAsc(rows, column)
+                }
+                // for powerstats
+                if (digitHeaderMatch) {
+                    rows = rows.sort(function (a, b) {
+                        return a.Powerstats[column] - b.Powerstats[column];
+                    });
+                }
+                if (column == 'Weight' || column == 'Height') {
+                    rows = rows.sort(function (a, b) {
+                        return parseInt(a[column][1]) - parseInt(b[column][1])
+                    });
+                }
+                // for descending
+            } else {
+                header.setAttribute('data-order', 'asce')
+                if (stringHeaderMatch) {
+                    rows = sortedDesc(rows, column)
+                }
+
+                if (digitHeaderMatch) {
+                    rows = rows.sort(function (a, b) {
+                        return b.Powerstats[column] - a.Powerstats[column];
+                    });
+                }
+                if (column == 'Weight' || column == 'Height') {
+                    rows = rows.sort(function (a, b) {
+                        return parseInt(b[column][1]) - parseInt(a[column][1])
+                    });
+                }
+            }
+            // when this function is called the data is auto set to original array (await sortable)
+            // when function is called, data can only be returned once
+
+            // return rows
+            let tableRowData = ""
+            rows.map(row => {
+                tableRowData += `<tr>
+                <td><img src="${row.Icon}"></td>
+                <td>${row.Name}</td>
+                <td>${row.Full_Name}</td>
+                <td>${row.Powerstats.intelligence}</td>
+                <td>${row.Powerstats.strength}</td>
+                <td>${row.Powerstats.power}</td>
+                <td>${row.Powerstats.durability}</td>
+                <td>${row.Powerstats.combat}</td>
+                <td>${row.Powerstats.speed}</td>
+                <td>${row.Race}</td>
+                <td>${row.Gender}</td>
+                <td>${row.Height[1]}</td>
+                <td>${row.Weight[1]}</td>
+                <td>${row.Place_Of_Birth}</td>
+                <td>${row.Alignement}</td>
+                </tr>`
+            })
+            // console.log(tableRowData)
+            tableBody.innerHTML = tableRowData
+
+        })
+    }
+
     let tableRowData = ""
     data.filter((row, index) => {
         let start = (curPage - 1) * pageSize;
@@ -81,24 +161,120 @@ export async function loadIntoTable(data) {
             <td><img src="${row.Icon}"></td>
             <td>${row.Name}</td>
             <td>${row.Full_Name}</td>
-            <td> <ol>
-            <ol>Intelligence: ${row.Powerstats.intelligence}
-            <ol>Strength: ${row.Powerstats.strength}
-            <ol>Power: ${row.Powerstats.power}
-            <ol>Durablilty: ${row.Powerstats.durability}
-            <ol>Combat: ${row.Powerstats.combat}
-            <ol>Speed: ${row.Powerstats.speed}
+            <td>${row.Powerstats.intelligence}</td>
+            <td>${row.Powerstats.strength}</td>
+            <td>${row.Powerstats.power}</td>
+            <td>${row.Powerstats.durability}</td>
+            <td>${row.Powerstats.combat}</td>
+            <td>${row.Powerstats.speed}</td>
             <td>${row.Race}</td>
             <td>${row.Gender}</td>
-            <td>${row.Height[0]}</td>
+            <td>${row.Height[1]}</td>
             <td>${row.Weight[1]}</td>
             <td>${row.Place_Of_Birth}</td>
             <td>${row.Alignement}</td>
             </tr>`
     })
-    document.getElementById('tbody').innerHTML = tableRowData
+    // console.log(tableRowData)
+    tableBody.innerHTML = tableRowData
+    // document.getElementById('tbody').innerHTML = tableRowData
 
 }
+
+// export async function sortTableByColumn() {
+//     let sortedData = await sortable()
+//     loadIntoTable()
+
+//     // const numberHeaderMatch = 
+//     const getAllHeaders = document.querySelectorAll('th')
+//     for (const header of getAllHeaders) {
+//         header.addEventListener('click', function () {
+//             const getOrder = header.getAttribute('data-order')
+//             const column = header.getAttribute('data-column')
+//             const stringHeaderMatch = /Name|Full_Name|Race|Gender|Place_Of_Birth|Alignement/.test(column)
+//             const digitHeaderMatch = /intelligence|strength|power|durability|combat|speed/.test(column)
+//             console.log(column, 'was clicked', getOrder)
+
+//             // for ascending 
+//             if (getOrder == 'asce') {
+//                 header.setAttribute('data-order', 'desc')
+//                 // for string values
+//                 if (stringHeaderMatch) {
+//                     sortedData = sortedAsc(sortedData, column)
+//                 }
+//                 // for powerstats
+//                 if (digitHeaderMatch) {
+//                     sortedData = sortedData.sort(function (a, b) {
+//                         return a.Powerstats[column] - b.Powerstats[column];
+//                     });
+//                 }
+//                 if (column == 'Weight' || column == 'Height') {
+//                     sortedData = sortedData.sort(function (a, b) {
+//                         return parseInt(a[column][1]) - parseInt(b[column][1])
+//                     });
+//                 }
+//                 // for descending
+//             } else {
+//                 header.setAttribute('data-order', 'asce')
+//                 if (stringHeaderMatch) {
+//                     sortedData = sortedDesc(sortedData, column)
+//                 }
+
+//                 if (digitHeaderMatch) {
+//                     sortedData = sortedData.sort(function (a, b) {
+//                         return b.Powerstats[column] - a.Powerstats[column];
+//                     });
+//                 }
+//                 if (column == 'Weight' || column == 'Height') {
+//                     sortedData = sortedData.sort(function (a, b) {
+//                         return parseInt(b[column][1]) - parseInt(a[column][1])
+//                     });
+//                 }
+//             }
+//             // when this function is called the data is auto set to original array (await sortable)
+//             // when function is called, data can only be returned once
+//             loadIntoTable(sortedData)
+
+//         })
+//     }
+
+// }
+
+// // data for powerstats
+
+// // for null or "" values
+const sortedAsc = (data, column) => data.sort((a, b) => {
+    if (a[column] === null || a[column] === "" || a[column] === '-') {
+        return 1;
+    }
+
+    if (b[column] === null || b[column] === "" || b[column] === '-') {
+        return -1;
+    }
+
+    if (a[column] === b[column]) {
+        return 0;
+    }
+
+    return a[column] < b[column] ? -1 : 1;
+});
+
+
+const sortedDesc = (data, column) => data.sort((a, b) => {
+    if (a[column] === null || a[column] === "" || a[column] === '-') {
+        return 1;
+    }
+
+    if (b[column] === null || b[column] === "" || b[column] === '-') {
+        return -1;
+    }
+
+    if (a[column] === b[column]) {
+        return 0;
+    }
+
+    return a[column] > b[column] ? -1 : 1;
+});
 
 /*function sort(e) {
     let thisSort = e.target.dataset.sort;
