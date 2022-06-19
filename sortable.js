@@ -6,11 +6,13 @@ document.addEventListener('DOMContentLoaded', sortable, false);
 
 let data, table, sortCol;
 let sortAsc = false;
-const pageSize = getOption();
+const defaultPageSize = 20;
+var pageSize = getOption();
+var resultSize = 0;
 
 let curPage = 1;
-
 var dataAll = []
+
 export async function sortable() {
 
     const heroData = await fetch('https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json')
@@ -33,13 +35,8 @@ export async function sortable() {
             }
         })
 
-    loadIntoTable(dataAll)
-
-    //sort = sort()
-
-    /*document.querySelectorAll('#table thead tr th').forEach(t => {
-        t.addEventListener('click', sort, false);
-    });*/
+    loadIntoTable(dataAll);
+    resultSize = dataAll.length;
 
     function previousPage() {
         if (curPage > 1) curPage--;
@@ -53,6 +50,8 @@ export async function sortable() {
 
     document.querySelector('#nextButton').addEventListener('click', nextPage, false);
     document.querySelector('#prevButton').addEventListener('click', previousPage, false);
+    document.querySelector('#noRowsDisplay').addEventListener('change', foo, false);
+
     return dataAll
 }
 
@@ -145,14 +144,13 @@ export async function loadIntoTable(data) {
                 <td>${row.Alignement}</td>
                 </tr>`
             })
-            // console.log(tableRowData)
             tableBody.innerHTML = tableRowData
 
         })
     }
 
     let tableRowData = ""
-    data.filter((row, index) => {
+    dataAll.filter((row, index) => {
         let start = (curPage - 1) * pageSize;
         let end = curPage * pageSize;
         if (index >= start && index < end) return true;
@@ -175,74 +173,10 @@ export async function loadIntoTable(data) {
             <td>${row.Alignement}</td>
             </tr>`
     })
-    // console.log(tableRowData)
     tableBody.innerHTML = tableRowData
-    // document.getElementById('tbody').innerHTML = tableRowData
 
 }
 
-// export async function sortTableByColumn() {
-//     let sortedData = await sortable()
-//     loadIntoTable()
-
-//     // const numberHeaderMatch = 
-//     const getAllHeaders = document.querySelectorAll('th')
-//     for (const header of getAllHeaders) {
-//         header.addEventListener('click', function () {
-//             const getOrder = header.getAttribute('data-order')
-//             const column = header.getAttribute('data-column')
-//             const stringHeaderMatch = /Name|Full_Name|Race|Gender|Place_Of_Birth|Alignement/.test(column)
-//             const digitHeaderMatch = /intelligence|strength|power|durability|combat|speed/.test(column)
-//             console.log(column, 'was clicked', getOrder)
-
-//             // for ascending 
-//             if (getOrder == 'asce') {
-//                 header.setAttribute('data-order', 'desc')
-//                 // for string values
-//                 if (stringHeaderMatch) {
-//                     sortedData = sortedAsc(sortedData, column)
-//                 }
-//                 // for powerstats
-//                 if (digitHeaderMatch) {
-//                     sortedData = sortedData.sort(function (a, b) {
-//                         return a.Powerstats[column] - b.Powerstats[column];
-//                     });
-//                 }
-//                 if (column == 'Weight' || column == 'Height') {
-//                     sortedData = sortedData.sort(function (a, b) {
-//                         return parseInt(a[column][1]) - parseInt(b[column][1])
-//                     });
-//                 }
-//                 // for descending
-//             } else {
-//                 header.setAttribute('data-order', 'asce')
-//                 if (stringHeaderMatch) {
-//                     sortedData = sortedDesc(sortedData, column)
-//                 }
-
-//                 if (digitHeaderMatch) {
-//                     sortedData = sortedData.sort(function (a, b) {
-//                         return b.Powerstats[column] - a.Powerstats[column];
-//                     });
-//                 }
-//                 if (column == 'Weight' || column == 'Height') {
-//                     sortedData = sortedData.sort(function (a, b) {
-//                         return parseInt(b[column][1]) - parseInt(a[column][1])
-//                     });
-//                 }
-//             }
-//             // when this function is called the data is auto set to original array (await sortable)
-//             // when function is called, data can only be returned once
-//             loadIntoTable(sortedData)
-
-//         })
-//     }
-
-// }
-
-// // data for powerstats
-
-// // for null or "" values
 const sortedAsc = (data, column) => data.sort((a, b) => {
     if (a[column] === null || a[column] === "" || a[column] === '-') {
         return 1;
@@ -276,33 +210,33 @@ const sortedDesc = (data, column) => data.sort((a, b) => {
     return a[column] > b[column] ? -1 : 1;
 });
 
-/*function sort(e) {
-    let thisSort = e.target.dataset.sort;
-    if (sortCol === thisSort) sortAsc = !sortAsc;
-    sortCol = thisSort;
-    dataAll.sort((a, b) => {
-        if (a[sortCol] < b[sortCol]) return sortAsc ? 1 : -1;
-        if (a[sortCol] > b[sortCol]) return sortAsc ? -1 : 1;
-        return 0;
-    });
-    renderTable();
-}*/
-
-function previousPage() {
-    if (curPage > 1) curPage--;
-    renderTable();
-}
-
-function nextPage() {
-    if ((curPage * pageSize) < heroData.length) curPage++;
-    renderTable();
-}
-
 export function getOption() {
     var select = document.getElementById("noRowsDisplay");
-    select.onchange = function () {
-        var selectedString = select.options[select.selectedIndex].value;
-        alert(selectedString);
+
+    var selectedString = select.options[select.selectedIndex].value;
+
+    if (selectedString == '10') {
+        console.log(10)
+        return 10
+    } else if (selectedString == '20') {
+        console.log(20)
+        return 20
+    } else if (selectedString == 50) {
+        console.log(50)
+        return 50
+    } else if (selectedString == 100) {
+        console.log(100)
+        return 100
+    } else if (selectedString == 'All') {
+        console.log(563)
+        return dataAll.length;
     }
-    return 20
+
+    return defaultPageSize;
+}
+
+
+function foo() {
+    pageSize = getOption();
+    sortable();
 }
