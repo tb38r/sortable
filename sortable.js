@@ -56,7 +56,7 @@ export async function sortable() {
 }
 
 export async function loadIntoTable(data) {
-    const headers = ['Icon', 'Name', 'Full_Name', 'Intelligence', 'Strength', 'Power', 'Durability', 'Combat', 'Speed', 'Race', 'Gender', 'Height', 'Weight', 'Place_Of_Birth', 'Alignement']
+    const headers = ['Icon', 'Name', 'Full_Name', 'intelligence', 'strength', 'power', 'durability', 'combat', 'speed', 'Race', 'Gender', 'Height', 'Weight', 'Place_Of_Birth', 'Alignement']
     let rows = await data;
     // let rows = await sortable()
     const table = document.querySelector('table');
