@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', sortable, false);
 
 let data, table, sortCol;
 let sortAsc = false;
-const pageSize = 20;
+const pageSize = getOption();
+
 let curPage = 1;
 
 export async function sortable() {
@@ -33,6 +34,11 @@ export async function sortable() {
         })
 
     loadIntoTable(dataAll)
+    //sort = sort()
+
+    /*document.querySelectorAll('#table thead tr th').forEach(t => {
+        t.addEventListener('click', sort, false);
+    });*/
 
     function previousPage() {
         if (curPage > 1) curPage--;
@@ -94,17 +100,17 @@ export async function loadIntoTable(data) {
 
 }
 
-function sort(e) {
+/*function sort(e) {
     let thisSort = e.target.dataset.sort;
     if (sortCol === thisSort) sortAsc = !sortAsc;
     sortCol = thisSort;
-    data.sort((a, b) => {
+    dataAll.sort((a, b) => {
         if (a[sortCol] < b[sortCol]) return sortAsc ? 1 : -1;
         if (a[sortCol] > b[sortCol]) return sortAsc ? -1 : 1;
         return 0;
     });
     renderTable();
-}
+}*/
 
 function previousPage() {
     if (curPage > 1) curPage--;
@@ -114,4 +120,13 @@ function previousPage() {
 function nextPage() {
     if ((curPage * pageSize) < heroData.length) curPage++;
     renderTable();
+}
+
+export function getOption() {
+    var select = document.getElementById("noRowsDisplay");
+    select.onchange = function () {
+        var selectedString = select.options[select.selectedIndex].value;
+        alert(selectedString);
+    }
+    return 20
 }
