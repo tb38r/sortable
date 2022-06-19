@@ -20,24 +20,19 @@
             box-sizing: border-box;
         }
 
-        body {
-            /* font-family: sans-serif;
-            letter-spacing: 1.5px;
-            background: var(--background);
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-content: center; */
-            /*width: 100vw;
-            /*height: 100vh;
-            padding: 5rem;
-            font-size: 12px; */
+        h1 {
+            font-family: fantasy;
+            font-size: xx-large;
+            font-weight: bold;
+            color: white;
+            background: seagreen;
+            text-align: center;
         }
 
         table {
 
             border-collapse: collapse;
-            font-family: 'Quicksand', sans-serif;
+            font-family: fantasy;
             overflow: hidden;
             font-weight: bold;
         }
@@ -56,28 +51,22 @@
 </head>
 
 <body>
-    <h1>SORTABLE</h1>
-    <br>
-    <br>
+    <h1> SORTABLE</h1>
     <br>
 
     <script type="module">
 
         import { sortable, loadIntoTable, getOption } from './sortable.js'
 
-        // sortable()
         getOption()
         loadIntoTable()
-        // sortable()
-        // sortTableByColumn()
 
     </script>
 
     <div id="noRows">
         <br>
-        <br>
-        <br>
-        <label for="noRowsDisplay">Select number of rows:</label>
+
+        <label for="noRowsDisplay" style="font-family: fantasy;">Select number of rows:</label>
         <select id="noRowsDisplay">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -86,6 +75,8 @@
             <option value="All">All</option>
         </select>
         <br>
+        <br>
+
     </div>
 
     <table id="table">
