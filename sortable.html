@@ -33,6 +33,24 @@
             padding: 5rem;
             font-size: 12px; */
         }
+
+        table {
+
+            border-collapse: collapse;
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            font-weight: bold;
+        }
+
+        table thead th {
+            background: cadetblue;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        table td {
+            padding: 10px 20px;
+        }
     </style>
 </head>
 
@@ -41,15 +59,18 @@
     <br>
     <br>
     <br>
+
     <table class="table">
         <thead></thead>
         <tbody id="tbody" style="text-align: center"></tbody>
     </table>
+    <button id="prevButton">Previous</button>
+    <button id="nextButton">Next</button>
     <script type="module">
 
         import { sortable, loadIntoTable } from './sortable.js'
 
-        loadIntoTable()
+        sortable()
 
     </script>
 </body>

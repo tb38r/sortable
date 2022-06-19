@@ -1,3 +1,14 @@
+
+//ideas from this blog 
+//https://www.raymondcamden.com/2022/03/14/building-table-sorting-and-pagination-in-javascript
+
+document.addEventListener('DOMContentLoaded', sortable, false);
+
+let data, table, sortCol;
+let sortAsc = false;
+const pageSize = 20;
+let curPage = 1;
+
 export async function sortable() {
     var dataAll = []
 
@@ -21,11 +32,23 @@ export async function sortable() {
             }
         })
 
-    return dataAll
+    loadIntoTable(dataAll)
+
+    function previousPage() {
+        if (curPage > 1) curPage--;
+        loadIntoTable(dataAll);
+    }
+
+    function nextPage() {
+        if ((curPage * pageSize) < dataAll.length) curPage++;
+        loadIntoTable(dataAll);
+    }
+
+    document.querySelector('#nextButton').addEventListener('click', nextPage, false);
+    document.querySelector('#prevButton').addEventListener('click', previousPage, false);
 }
 
 export async function loadIntoTable(data) {
-    data = sortable();
     const headers = ['Icon', 'Name', 'Full Name', 'Powerstats', 'Race', 'Gender', 'Height', 'Weight', 'Place of Birth', 'Alignment']
     const rows = await data;
     const table = document.querySelector('table');
@@ -37,43 +60,28 @@ export async function loadIntoTable(data) {
 
     for (const headerText of headers) {
         const headerElement = document.createElement("th");
+        headerElement.setAttribute("th", "data-sort");
         headerElement.textContent = headerText;
         tableHead.querySelector("tr").appendChild(headerElement);
     }
     console.log(rows)
     let tableRowData = ""
-    rows.map(row => {
+    data.filter((row, index) => {
+        let start = (curPage - 1) * pageSize;
+        let end = curPage * pageSize;
+        if (index >= start && index < end) return true;
+    }).forEach(row => {
         tableRowData += `<tr>
             <td><img src="${row.Icon}"></td>
             <td>${row.Name}</td>
             <td>${row.Full_Name}</td>
-            <td> <table>
-            <tr>
-            <br>
-            <td>Intelligence:</td>
-            <td>${row.Powerstats.intelligence}</td>
-            </tr>
-            <tr>
-            <td>Strength:</td>
-            <td>${row.Powerstats.strength}</td>
-            </tr>
-            <tr>
-            <td>Power:</td>
-            <td>${row.Powerstats.power}</td>
-            </tr>
-            <tr>
-            <td>Durablilty:</td>
-            <td>${row.Powerstats.durability}</td>
-            </tr>
-            <tr>
-            <td>Combat:</td>
-            <td>${row.Powerstats.combat}</td>
-            </tr>
-            <tr>
-            <td>Speed:</td>
-            <td>${row.Powerstats.speed}</td>
-            </tr>
-        </table></td>
+            <td> <ol>
+            <ol>Intelligence: ${row.Powerstats.intelligence}
+            <ol>Strength: ${row.Powerstats.strength}
+            <ol>Power: ${row.Powerstats.power}
+            <ol>Durablilty: ${row.Powerstats.durability}
+            <ol>Combat: ${row.Powerstats.combat}
+            <ol>Speed: ${row.Powerstats.speed}
             <td>${row.Race}</td>
             <td>${row.Gender}</td>
             <td>${row.Height[0]}</td>
@@ -84,4 +92,26 @@ export async function loadIntoTable(data) {
     })
     document.getElementById('tbody').innerHTML = tableRowData
 
+}
+
+function sort(e) {
+    let thisSort = e.target.dataset.sort;
+    if (sortCol === thisSort) sortAsc = !sortAsc;
+    sortCol = thisSort;
+    data.sort((a, b) => {
+        if (a[sortCol] < b[sortCol]) return sortAsc ? 1 : -1;
+        if (a[sortCol] > b[sortCol]) return sortAsc ? -1 : 1;
+        return 0;
+    });
+    renderTable();
+}
+
+function previousPage() {
+    if (curPage > 1) curPage--;
+    renderTable();
+}
+
+function nextPage() {
+    if ((curPage * pageSize) < heroData.length) curPage++;
+    renderTable();
 }
