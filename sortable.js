@@ -20,13 +20,13 @@ export async function sortable() {
                 })
             }
         })
-
+    // console.log(dataAll);
     return dataAll
 }
 
 export async function loadIntoTable(data = dataAll) {
     const headers = ['Icon', 'Name', 'Full_Name', 'intelligence', 'strength', 'power', 'durability', 'combat', 'speed', 'Race', 'Gender', 'Height', 'Weight', 'Place_Of_Birth', 'Alignement']
-    const rows = data
+    let rows = await sortable()
     const table = document.querySelector('table');
     const tableHead = table.querySelector('thead');
     const tableBody = table.querySelector('tbody');
@@ -42,37 +42,6 @@ export async function loadIntoTable(data = dataAll) {
         tableHead.querySelector("tr").appendChild(headerElement);
     }
 
-    let tableRowData = ""
-    rows.map(row => {
-        tableRowData += `<tr>
-            <td><img src="${row.Icon}"></td>
-            <td>${row.Name}</td>
-            <td>${row.Full_Name}</td>
-            <td>${row.Powerstats.intelligence}</td>
-            <td>${row.Powerstats.strength}</td>
-            <td>${row.Powerstats.power}</td>
-            <td>${row.Powerstats.durability}</td>
-            <td>${row.Powerstats.combat}</td>
-            <td>${row.Powerstats.speed}</td>
-            <td>${row.Race}</td>
-            <td>${row.Gender}</td>
-            <td>${row.Height[1]}</td>
-            <td>${row.Weight[1]}</td>
-            <td>${row.Place_Of_Birth}</td>
-            <td>${row.Alignement}</td>
-            </tr>`
-
-    })
-
-    document.getElementById('tbody').innerHTML = tableRowData
-
-}
-
-export async function sortTableByColumn() {
-    let data = await sortable()
-    loadIntoTable()
-
-    // const numberHeaderMatch = 
     const getAllHeaders = document.querySelectorAll('th')
     for (const header of getAllHeaders) {
         header.addEventListener('click', function () {
@@ -87,16 +56,16 @@ export async function sortTableByColumn() {
                 header.setAttribute('data-order', 'desc')
                 // for string values
                 if (stringHeaderMatch) {
-                    data = sortedAsc(data, column)
+                    rows = sortedAsc(rows, column)
                 }
                 // for powerstats
                 if (digitHeaderMatch) {
-                    data = data.sort(function (a, b) {
+                    rows = rows.sort(function (a, b) {
                         return a.Powerstats[column] - b.Powerstats[column];
                     });
                 }
                 if (column == 'Weight' || column == 'Height') {
-                    data = data.sort(function (a, b) {
+                    rows = rows.sort(function (a, b) {
                         return parseInt(a[column][1]) - parseInt(b[column][1])
                     });
                 }
@@ -104,16 +73,16 @@ export async function sortTableByColumn() {
             } else {
                 header.setAttribute('data-order', 'asce')
                 if (stringHeaderMatch) {
-                    data = sortedDesc(data, column)
+                    rows = sortedDesc(rows, column)
                 }
 
                 if (digitHeaderMatch) {
-                    data = data.sort(function (a, b) {
+                    rows = rows.sort(function (a, b) {
                         return b.Powerstats[column] - a.Powerstats[column];
                     });
                 }
                 if (column == 'Weight' || column == 'Height') {
-                    data = data.sort(function (a, b) {
+                    rows = rows.sort(function (a, b) {
                         return parseInt(b[column][1]) - parseInt(a[column][1])
                     });
                 }
@@ -121,15 +90,122 @@ export async function sortTableByColumn() {
             // when this function is called the data is auto set to original array (await sortable)
             // when function is called, data can only be returned once
 
-            loadIntoTable(data)
+            // return rows
+            let tableRowData = ""
+            rows.map(row => {
+                tableRowData += `<tr>
+                <td><img src="${row.Icon}"></td>
+                <td>${row.Name}</td>
+                <td>${row.Full_Name}</td>
+                <td>${row.Powerstats.intelligence}</td>
+                <td>${row.Powerstats.strength}</td>
+                <td>${row.Powerstats.power}</td>
+                <td>${row.Powerstats.durability}</td>
+                <td>${row.Powerstats.combat}</td>
+                <td>${row.Powerstats.speed}</td>
+                <td>${row.Race}</td>
+                <td>${row.Gender}</td>
+                <td>${row.Height[1]}</td>
+                <td>${row.Weight[1]}</td>
+                <td>${row.Place_Of_Birth}</td>
+                <td>${row.Alignement}</td>
+                </tr>`
+            })
+            // console.log(tableRowData)
+            tableBody.innerHTML = tableRowData
+
         })
     }
 
+    let tableRowData = ""
+
+    rows.map(row => {
+        tableRowData += `<tr>
+        <td><img src="${row.Icon}"></td>
+        <td>${row.Name}</td>
+        <td>${row.Full_Name}</td>
+        <td>${row.Powerstats.intelligence}</td>
+        <td>${row.Powerstats.strength}</td>
+        <td>${row.Powerstats.power}</td>
+        <td>${row.Powerstats.durability}</td>
+        <td>${row.Powerstats.combat}</td>
+        <td>${row.Powerstats.speed}</td>
+        <td>${row.Race}</td>
+        <td>${row.Gender}</td>
+        <td>${row.Height[1]}</td>
+        <td>${row.Weight[1]}</td>
+        <td>${row.Place_Of_Birth}</td>
+        <td>${row.Alignement}</td>
+        </tr>`
+    })
+    // console.log(tableRowData)
+    tableBody.innerHTML = tableRowData
+    // document.getElementById('tbody').innerHTML = tableRowData
+
 }
 
-// data for powerstats
+// export async function sortTableByColumn() {
+//     let sortedData = await sortable()
+//     loadIntoTable()
 
-// for null or "" values
+//     // const numberHeaderMatch = 
+//     const getAllHeaders = document.querySelectorAll('th')
+//     for (const header of getAllHeaders) {
+//         header.addEventListener('click', function () {
+//             const getOrder = header.getAttribute('data-order')
+//             const column = header.getAttribute('data-column')
+//             const stringHeaderMatch = /Name|Full_Name|Race|Gender|Place_Of_Birth|Alignement/.test(column)
+//             const digitHeaderMatch = /intelligence|strength|power|durability|combat|speed/.test(column)
+//             console.log(column, 'was clicked', getOrder)
+
+//             // for ascending 
+//             if (getOrder == 'asce') {
+//                 header.setAttribute('data-order', 'desc')
+//                 // for string values
+//                 if (stringHeaderMatch) {
+//                     sortedData = sortedAsc(sortedData, column)
+//                 }
+//                 // for powerstats
+//                 if (digitHeaderMatch) {
+//                     sortedData = sortedData.sort(function (a, b) {
+//                         return a.Powerstats[column] - b.Powerstats[column];
+//                     });
+//                 }
+//                 if (column == 'Weight' || column == 'Height') {
+//                     sortedData = sortedData.sort(function (a, b) {
+//                         return parseInt(a[column][1]) - parseInt(b[column][1])
+//                     });
+//                 }
+//                 // for descending
+//             } else {
+//                 header.setAttribute('data-order', 'asce')
+//                 if (stringHeaderMatch) {
+//                     sortedData = sortedDesc(sortedData, column)
+//                 }
+
+//                 if (digitHeaderMatch) {
+//                     sortedData = sortedData.sort(function (a, b) {
+//                         return b.Powerstats[column] - a.Powerstats[column];
+//                     });
+//                 }
+//                 if (column == 'Weight' || column == 'Height') {
+//                     sortedData = sortedData.sort(function (a, b) {
+//                         return parseInt(b[column][1]) - parseInt(a[column][1])
+//                     });
+//                 }
+//             }
+//             // when this function is called the data is auto set to original array (await sortable)
+//             // when function is called, data can only be returned once
+//             loadIntoTable(sortedData)
+
+//         })
+//     }
+
+// }
+
+// // data for powerstats
+
+// // for null or "" values
 const sortedAsc = (data, column) => data.sort((a, b) => {
     if (a[column] === null || a[column] === "" || a[column] === '-') {
         return 1;
