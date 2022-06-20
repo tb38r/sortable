@@ -37,9 +37,6 @@ export async function sortable() {
   loadIntoTable(dataAll);
   resultSize = dataAll.length;
 
-
-
-
   function previousPage() {
     if (curPage > 1) curPage--;
     loadIntoTable(dataAll);
@@ -56,7 +53,9 @@ export async function sortable() {
   document
     .querySelector("#prevButton")
     .addEventListener("click", previousPage, false);
-    document.querySelector('#noRowsDisplay').addEventListener('change', foo, false);
+  document
+    .querySelector("#noRowsDisplay")
+    .addEventListener("change", foo, false);
 
   return dataAll;
 }
@@ -123,6 +122,7 @@ export async function loadIntoTable(data = dataAll, userInput = "") {
           });
         }
         if (column == "Weight" || column == "Height") {
+        
           rows = rows.sort(function (a, b) {
             return parseInt(a[column][1]) - parseInt(b[column][1]);
           });
@@ -186,12 +186,13 @@ export async function loadIntoTable(data = dataAll, userInput = "") {
 
     let textContent = e.target.value;
 
-    dataAll.map((row) => {if(
-     row.Name.replace(/[^0-9A-Z" "]+/gi, "")
-        .toLowerCase()
-        .includes(textContent)){
-
-      tableRowData += `<tr>
+    dataAll.map((row) => {
+      if (
+        row.Name.replace(/[^0-9A-Z" "]+/gi, "")
+          .toUpperCase()
+          .includes(textContent.toUpperCase())
+      ) {
+        tableRowData += `<tr>
       <td><img src="${row.Icon}"></td>
       <td>${row.Name}</td>
       <td>${row.Full_Name}</td>
@@ -210,11 +211,9 @@ export async function loadIntoTable(data = dataAll, userInput = "") {
       </tr>`;
       }
     });
-    console.log('Tlr', tableRowData);
+    console.log("Tlr", tableRowData);
     tableBody.innerHTML = tableRowData;
   });
-
-
 
   dataAll
     .filter((row, index) => {
@@ -368,26 +367,25 @@ export function getOption() {
 
   var selectedString = select.options[select.selectedIndex].value;
 
-  if (selectedString == '10') {
-      console.log(10)
-      return 10
-  } else if (selectedString == '20') {
-      console.log(20)
-      return 20
+  if (selectedString == "10") {
+    console.log(10);
+    return 10;
+  } else if (selectedString == "20") {
+    console.log(20);
+    return 20;
   } else if (selectedString == 50) {
-      console.log(50)
-      return 50
+    console.log(50);
+    return 50;
   } else if (selectedString == 100) {
-      console.log(100)
-      return 100
-  } else if (selectedString == 'All') {
-      console.log(563)
-      return dataAll.length;
+    console.log(100);
+    return 100;
+  } else if (selectedString == "All") {
+    console.log(563);
+    return dataAll.length;
   }
 
   return defaultPageSize;
 }
-
 
 function foo() {
   pageSize = getOption();
